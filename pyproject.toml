@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "tradingview-report-screenshot-automator"
+version = "0.1.0"
+description = "A Tkinter-based app to automate screenshots of TradingView strategy tester results."
+authors = ["Your Name <your_email@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pyautogui = "^0.9.53"  # For automating keyboard and mouse actions
+pillow = "^9.0"        # For image handling
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.0"  # For writing and running tests
+
+[build-system]
+requires = ["poetry>=1.1"]
+build-backend = "poetry.core.masonry.api"
