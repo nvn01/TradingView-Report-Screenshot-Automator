@@ -13,6 +13,18 @@ def log_message(log_box, message):
     log_box.see(tk.END)
     log_box.update_idletasks()  # Ensure UI updates immediately
 
+# Function to wait for a pixel color at (x, y) to change from an initial_color
+# Returns True if the color changes within timeout, otherwise False
+def wait_for_pixel_change(x, y, initial_color, log_box, timeout=30):
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        current_color = pyautogui.pixel(x, y)
+        if current_color != initial_color:
+            log_message(log_box, f"Pixel at ({x},{y}) changed color from {initial_color} to {current_color}.")
+            return True
+        time.sleep(0.5)
+    return False
+
 # Function to save configuration to a file
 def save_config(total, coin_list):
     with open(CONFIG_FILE, "w") as config_file:
@@ -68,8 +80,12 @@ def automate_screenshots(total, coin_list, image_folder, log_box):
 
         # Generate the report
         pyautogui.press("enter")
-        log_message(log_box, "Generate report clicked. Waiting for 5s...")
-        time.sleep(5)  # Wait for the report to generate
+        log_message(log_box, "Generate report clicked. Waiting for the pixel (820, 305) to change from (255, 255, 255)...")
+
+        # Wait until the pixel changes color or we time out
+        changed = wait_for_pixel_change(99, 997, (255, 255, 255), log_box, timeout=30)
+        if not changed:
+            log_message(log_box, "Pixel color did not change within 30s (timeout). Taking screenshot anyway.")
 
         # Take the screenshot
         filename = f"{coin}.png"
@@ -98,7 +114,6 @@ def main():
     # Create Tkinter window
     root = tk.Tk()
     root.title("TradingView Report Screenshot Automator")
-    root.attributes('-topmost', True)  # Keep the window always on top
 
     # Tab Control
     tab_control = ttk.Notebook(root)
