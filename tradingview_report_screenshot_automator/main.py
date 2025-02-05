@@ -4,6 +4,9 @@ from tkinter import ttk
 import pyautogui
 import time
 import os
+import platform
+if platform.system() == "Windows":
+    import winsound
 
 CONFIG_FILE = "config.txt"
 
@@ -106,6 +109,18 @@ def automate_screenshots(total, coin_list, image_folder, log_box):
         log_message(log_box, "Ready for the next item.")
 
     log_message(log_box, "Automation process completed!")
+    make_beep()  # Add beep sound
+
+def make_beep():
+    if platform.system() == "Windows":
+        for _ in range(2):
+            winsound.Beep(1000, 500)  # 1000Hz for 500ms
+            time.sleep(0.1)
+    else:
+        # For Unix systems
+        for _ in range(2):
+            os.system('echo -n "\a"')
+            time.sleep(0.1)
 
 # Main Application
 def main():
