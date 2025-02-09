@@ -162,9 +162,6 @@ def main():
     tab_control.pack(expand=1, fill="both")
 
     # Home Tab
-    progress = ttk.Progressbar(home_tab, orient="horizontal", length=300, mode="determinate")
-    progress.pack(pady=10)
-
     # Create a frame to contain the log box
     log_frame = ttk.Frame(home_tab)
     log_frame.pack(fill=tk.BOTH, expand=True, pady=10, padx=10)
@@ -179,8 +176,8 @@ def main():
     log_box.configure(yscrollcommand=scrollbar.set)
 
     # Bind keyboard shortcuts
-    log_box.bind('<Control-plus>', lambda e: increase_font_size(log_box))
-    log_box.bind('<Control-minus>', lambda e: decrease_font_size(log_box))
+    root.bind('<Control-equal>', lambda e: increase_font_size(log_box))  # Changed from plus to equal
+    root.bind('<Control-minus>', lambda e: decrease_font_size(log_box))
 
     def start_process():
         # Clear images folder before starting
