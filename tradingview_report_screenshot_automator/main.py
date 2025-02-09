@@ -122,6 +122,27 @@ def make_beep():
             os.system('echo -n "\a"')
             time.sleep(0.1)
 
+def increase_font_size(log_box):
+    current_font = log_box.cget("font")
+    if isinstance(current_font, str):
+        family = current_font
+        size = 10
+    else:
+        family, size = current_font.split()
+        size = int(size)
+    log_box.configure(font=(family, size + 2))
+
+def decrease_font_size(log_box):
+    current_font = log_box.cget("font")
+    if isinstance(current_font, str):
+        family = current_font
+        size = 10
+    else:
+        family, size = current_font.split()
+        size = int(size)
+    if size > 6:  # Prevent font from becoming too small
+        log_box.configure(font=(family, size - 2))
+
 # Main Application
 def main():
     total, coin_list = load_config()
@@ -129,6 +150,8 @@ def main():
     # Create Tkinter window
     root = tk.Tk()
     root.title("TradingView Report Screenshot Automator")
+    root.geometry("800x600")  # Set initial window size
+    root.minsize(400, 300)    # Set minimum window size
 
     # Tab Control
     tab_control = ttk.Notebook(root)
@@ -142,8 +165,22 @@ def main():
     progress = ttk.Progressbar(home_tab, orient="horizontal", length=300, mode="determinate")
     progress.pack(pady=10)
 
-    log_box = tk.Text(home_tab, height=10, width=50)
-    log_box.pack(pady=10)
+    # Create a frame to contain the log box
+    log_frame = ttk.Frame(home_tab)
+    log_frame.pack(fill=tk.BOTH, expand=True, pady=10, padx=10)
+
+    # Create the log box with initial font size
+    log_box = tk.Text(log_frame, height=10, width=50, font=("TkDefaultFont", 12))
+    log_box.pack(fill=tk.BOTH, expand=True)
+
+    # Add scrollbar
+    scrollbar = ttk.Scrollbar(log_frame, orient="vertical", command=log_box.yview)
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+    log_box.configure(yscrollcommand=scrollbar.set)
+
+    # Bind keyboard shortcuts
+    log_box.bind('<Control-plus>', lambda e: increase_font_size(log_box))
+    log_box.bind('<Control-minus>', lambda e: decrease_font_size(log_box))
 
     def start_process():
         # Clear images folder before starting
