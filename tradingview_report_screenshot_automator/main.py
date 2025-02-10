@@ -171,7 +171,7 @@ def main():
     log_frame.pack(fill=tk.BOTH, expand=True, pady=10, padx=10)
 
     # Create the log box with initial font size and make it read-only
-    log_box = tk.Text(log_frame, height=10, width=50, font=("TkDefaultFont", 12), state='disabled')
+    log_box = tk.Text(log_frame, height=10, width=50, font=("TkDefaultFont", 10), state='disabled')
     log_box.pack(fill=tk.BOTH, expand=True)
 
     # Add scrollbar
@@ -223,11 +223,15 @@ def main():
         thread.daemon = True
         thread.start()
 
-    start_button = tk.Button(home_tab, text="Start", command=start_process)
-    start_button.pack(pady=5)
+    # Create a frame for buttons to place them side by side
+    button_frame = ttk.Frame(home_tab)
+    button_frame.pack(pady=10)
 
-    stop_button = tk.Button(home_tab, text="Stop", command=root.quit)
-    stop_button.pack(pady=5)
+    start_button = tk.Button(button_frame, text="Start", command=start_process, width=15, height=2)
+    start_button.pack(side=tk.LEFT, padx=5)
+
+    stop_button = tk.Button(button_frame, text="Stop", command=root.quit, width=15, height=2)
+    stop_button.pack(side=tk.LEFT, padx=5)
 
     # Config Tab
     tk.Label(config_tab, text="Total List:").pack(pady=5)
