@@ -7,14 +7,18 @@ import os
 import platform
 if platform.system() == "Windows":
     import winsound
+import threading
+from tkinter import messagebox
 
 CONFIG_FILE = "config.txt"
 
 # Function to log messages to the log box
 def log_message(log_box, message):
+    log_box.config(state='normal')
     log_box.insert(tk.END, message + "\n")
     log_box.see(tk.END)
-    log_box.update_idletasks()  # Ensure UI updates immediately
+    log_box.config(state='disabled')
+    log_box.update_idletasks()
 
 # Function to wait for a pixel color at (x, y) to change from an initial_color
 # Returns True if the color changes within timeout, otherwise False
@@ -130,7 +134,7 @@ def increase_font_size(log_box):
     else:
         family, size = current_font.split()
         size = int(size)
-    log_box.configure(font=(family, size + 2))
+    log_box.configure(font=(family, size + 5))
 
 def decrease_font_size(log_box):
     current_font = log_box.cget("font")
@@ -141,7 +145,7 @@ def decrease_font_size(log_box):
         family, size = current_font.split()
         size = int(size)
     if size > 6:  # Prevent font from becoming too small
-        log_box.configure(font=(family, size - 2))
+        log_box.configure(font=(family, size - 5))
 
 # Main Application
 def main():
@@ -166,8 +170,8 @@ def main():
     log_frame = ttk.Frame(home_tab)
     log_frame.pack(fill=tk.BOTH, expand=True, pady=10, padx=10)
 
-    # Create the log box with initial font size
-    log_box = tk.Text(log_frame, height=10, width=50, font=("TkDefaultFont", 12))
+    # Create the log box with initial font size and make it read-only
+    log_box = tk.Text(log_frame, height=10, width=50, font=("TkDefaultFont", 12), state='disabled')
     log_box.pack(fill=tk.BOTH, expand=True)
 
     # Add scrollbar
@@ -175,17 +179,49 @@ def main():
     scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
     log_box.configure(yscrollcommand=scrollbar.set)
 
-    # Bind keyboard shortcuts
-    root.bind('<Control-equal>', lambda e: increase_font_size(log_box))  # Changed from plus to equal
-    root.bind('<Control-minus>', lambda e: decrease_font_size(log_box))
+    # Modify the log_message function to handle the disabled state
+    def log_message(log_box, message):
+        log_box.config(state='normal')
+        log_box.insert(tk.END, message + "\n")
+        log_box.see(tk.END)
+        log_box.config(state='disabled')
+        log_box.update_idletasks()
+
+    # Modify key bindings for continuous font size changes
+    def handle_font_size(event, increase=True):
+        if increase:
+            increase_font_size(log_box)
+        else:
+            decrease_font_size(log_box)
+        return "break"  # Prevent default handling
+
+    root.bind('<Control-plus>', lambda e: handle_font_size(e, True))
+    root.bind('<Control-equal>', lambda e: handle_font_size(e, True))  # For keyboards where + requires shift
+    root.bind('<Control-minus>', lambda e: handle_font_size(e, False))
 
     def start_process():
-        # Clear images folder before starting
-        clear_images_folder("images", log_box)
-        # Ensure images folder exists
-        if not os.path.exists("images"):
-            os.makedirs("images")
-        automate_screenshots(total, coin_list, "images", log_box)
+        if hasattr(start_process, 'running') and start_process.running:
+            messagebox.showwarning("Warning", "Process is already running!")
+            return
+        
+        start_process.running = True
+        start_button.config(state='disabled')
+        
+        def run_automation():
+            try:
+                clear_images_folder("images", log_box)
+                if not os.path.exists("images"):
+                    os.makedirs("images")
+                automate_screenshots(total, coin_list, "images", log_box)
+            except Exception as e:
+                log_message(log_box, f"Error: {str(e)}")
+            finally:
+                start_process.running = False
+                root.after(0, lambda: start_button.config(state='normal'))
+        
+        thread = threading.Thread(target=run_automation)
+        thread.daemon = True
+        thread.start()
 
     start_button = tk.Button(home_tab, text="Start", command=start_process)
     start_button.pack(pady=5)
