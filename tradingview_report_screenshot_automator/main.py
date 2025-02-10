@@ -88,6 +88,10 @@ def automate_screenshots(total, coin_list, image_folder, log_box):
 
         # Wait until the pixel changes color
         changed = wait_for_pixel_change(99, 997, (255, 255, 255), log_box)
+        
+        # Add 2-second delay after pixel change
+        log_message(log_box, "Pixel changed, waiting 2 seconds before taking screenshot...")
+        time.sleep(2)
 
         # Take the screenshot
         filename = f"{coin}.png"
