@@ -22,7 +22,7 @@ def log_message(log_box, message):
 
 # Function to wait for a pixel color at (x, y) to change from an initial_color
 # Returns True if the color changes within timeout, otherwise False
-def wait_for_pixel_change(x, y, initial_color, log_box, timeout=30):
+def wait_for_pixel_change(x, y, initial_color, log_box, timeout=300):
     start_time = time.time()
     while time.time() - start_time < timeout:
         current_color = pyautogui.pixel(x, y)
@@ -89,9 +89,9 @@ def automate_screenshots(total, coin_list, image_folder, log_box):
         log_message(log_box, "Generate report clicked. Waiting for the pixel (820, 305) to change from (255, 255, 255)...")
 
         # Wait until the pixel changes color or we time out
-        changed = wait_for_pixel_change(99, 997, (255, 255, 255), log_box, timeout=30)
+        changed = wait_for_pixel_change(99, 997, (255, 255, 255), log_box, timeout=300)
         if not changed:
-            log_message(log_box, "Pixel color did not change within 30s (timeout). Taking screenshot anyway.")
+            log_message(log_box, "Pixel color did not change within 5 minutes (timeout). Taking screenshot anyway.")
 
         # Take the screenshot
         filename = f"{coin}.png"
