@@ -33,20 +33,19 @@ def wait_for_pixel_change(x, y, initial_color, log_box, timeout=30):
     return False
 
 # Function to save configuration to a file
-def save_config(total, coin_list):
+def save_config(coin_list):
     with open(CONFIG_FILE, "w") as config_file:
-        config_file.write(f"total={total}\n")
-        config_file.write(f"coins={','.join(coin_list)}\n")
+        config_file.write(f"chart={','.join(coin_list)}\n")
 
 # Function to load configuration from a file
 def load_config():
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, "r") as config_file:
             lines = config_file.readlines()
-            total = int(lines[0].strip().split("=")[1])
-            coin_list = lines[1].strip().split("=")[1].split(",")
+            coin_list = lines[0].strip().split("=")[1].split(",")
+            total = len(coin_list)  # Automatically count items
             return total, coin_list
-    return 10, ["BTCUSDT", "ETHUSDT", "SOLUSDT"]  # Default values
+    return 3, ["BTCUSDT", "ETHUSDT", "SOLUSDT"]  # Default values
 
 # Function to take screenshots
 def take_screenshot(file_path):
@@ -234,12 +233,6 @@ def main():
     stop_button.pack(side=tk.LEFT, padx=5)
 
     # Config Tab
-    tk.Label(config_tab, text="Total List:").pack(pady=5)
-
-    total_entry = tk.Entry(config_tab)
-    total_entry.insert(0, str(total))
-    total_entry.pack(pady=5)
-
     tk.Label(config_tab, text="List Name (comma-separated):").pack(pady=5)
 
     coin_text = tk.Text(config_tab, height=5, width=50)
@@ -248,12 +241,12 @@ def main():
 
     def save_config_and_update():
         nonlocal total, coin_list
-        total = int(total_entry.get())
         coin_list = coin_text.get("1.0", tk.END).strip().split(",")
-        save_config(total, coin_list)
-        log_message(log_box, "Configuration saved!")
+        total = len(coin_list)  # Update total based on list length
+        save_config(coin_list)
+        log_message(log_box, f"Configuration saved! Total items: {total}")
 
-    reset_button = tk.Button(config_tab, text="Reset", command=lambda: [total_entry.delete(0, tk.END), coin_text.delete("1.0", tk.END)])
+    reset_button = tk.Button(config_tab, text="Reset", command=lambda: coin_text.delete("1.0", tk.END))
     reset_button.pack(side=tk.LEFT, padx=5)
 
     save_button = tk.Button(config_tab, text="Save", command=save_config_and_update)
