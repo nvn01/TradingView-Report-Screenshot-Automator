@@ -1,8 +1,0 @@
-__pycache__/
-.venv/
-*.pyc
-*.pyo
-.DS_Store
-.idea/
-*.log
-images/*.png  # Optional, but you can exclude generated screenshots from Git
