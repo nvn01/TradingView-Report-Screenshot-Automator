@@ -1,139 +1,49 @@
 # TradingView Report Screenshot Automator
 
-**TradingView Report Screenshot Automator** is a Python-based Tkinter application designed to automate the process of taking screenshots of strategy tester results in TradingView. This tool helps users save time by automating repetitive tasks, such as navigating the TradingView interface and capturing screenshots, with customizable configurations.
+A Python-based Tkinter application that automates capturing **TradingView strategy tester reports**. This tool helps save time by **navigating the interface and taking screenshots automatically**.
 
 ## Features
 
-- **Automation**:
-  - Automatically navigate the TradingView interface using keyboard inputs.
-  - Capture screenshots of strategy tester reports and save them with custom filenames.
-- **Configuration**:
-  - Set the total number of items to process and specify the coin names in a configuration file.
-  - The application will save and reload configurations for future sessions.
-- **Folder Management**:
-  - Automatically clears the `images` folder at the start of each session to keep files organized.
-- **UI**:
-  - Simple and interactive user interface built with Tkinter.
-  - A log box displays real-time updates during the automation process.
+- **Automated Navigation**: Moves through TradingView’s UI and generates reports.
+- **Screenshot Capture**: Saves reports with custom filenames in the `images/` folder.
+- **Configurable**: Set the number of reports and coin names in `config.txt`.
+- **Logs**: Displays real-time progress updates in the UI.
 
-## Prerequisites
+## Installation
 
-Ensure you have the following installed:
-
-- Python 3.9 or higher
-- Required Python packages:
-  - `pyautogui`
-  - `tkinter` (included with Python)
-
-You can install the required packages using the command:
+Ensure **Python 3.9+** is installed. Then, install dependencies using **Poetry**:
 
 ```bash
-pip install pyautogui
+poetry install
 ```
 
-## Folder Structure
+## Usage
 
-The project directory is organized as follows:
-
-```
-TradingView-Report-Screenshot-Automator/
-│
-├── images/                  # Folder to store screenshots
-├── main.py                  # Main application script
-├── config.txt               # Configuration file (automatically generated)
-└── README.md                # Project documentation
-```
-
-## How to Use
-
-1. **Clone the Repository**:
-
-   ```bash
-   git clone https://github.com/<your-username>/TradingView-Report-Screenshot-Automator.git
-   cd TradingView-Report-Screenshot-Automator
-   ```
-
-2. **Run the Application**:
-   Execute the script using Python:
-
+1. **Run the program**:
    ```bash
    python main.py
    ```
+2. **Configure coins** in the "Config" tab and save.
+3. Click **Start** to begin automation.
+4. Screenshots will be saved in the `images/` folder.
+5. Click **Stop** to exit.
 
-3. **Configure Settings**:
+### 📌 **How-To Video**
 
-   - Navigate to the **Config** tab in the application.
-   - Enter the **Total List** (number of items to process).
-   - Specify coin names as a comma-separated list in the provided text box.
-   - Click **Save** to store your settings.
+Watch this video for a step-by-step guide:  
+🔗 [YouTube Tutorial](https://youtu.be/tAdeDQCjHlE)
 
-4. **Start Automation**:
-
-   - Go to the **Home** tab.
-   - Click the **Start** button to begin the automation process.
-   - The application will:
-     - Clear the `images/` folder.
-     - Capture screenshots of strategy tester results for the specified coin list.
-     - Save the screenshots in the `images/` folder.
-
-5. **Stop the Application**:
-   - Click the **Stop** button to exit the application.
-
-## Logs
-
-During the automation process, a log box displays real-time updates, such as:
-
-- Current coin being processed.
-- Screenshot status (success or error).
-- Navigation updates (e.g., returning to the watchlist).
-
-## Configuration File
-
-The `config.txt` file stores the settings for the application:
-
-- `total`: Number of items to process.
-- `coins`: Comma-separated list of coin names.
-
-Example:
+## Folder Structure
 
 ```
-total=10
-coins=BTCUSDT,ETHUSDT,SOLUSDT
+TradingView-Report-Screenshot-Automator/
+├── images/       # Screenshots saved here
+├── main.py       # Main script
+├── config.txt    # Settings file
+└── README.md     # This file
 ```
 
-## Example Output
+## Notes
 
-Screenshots are saved in the `images/` folder with filenames based on the coin name:
-
-```
-images/
-├── BTCUSDT.png
-├── ETHUSDT.png
-├── SOLUSDT.png
-```
-
-## Known Limitations
-
-- The application assumes that the TradingView interface layout remains consistent during automation.
-- A 5-second delay is used before starting automation to allow users to set up their screen.
-
-## Contributing
-
-Contributions are welcome! If you find any issues or want to add features:
-
-1. Fork this repository.
-2. Create a new branch.
-3. Submit a pull request with detailed explanations.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Acknowledgements
-
-- [PyAutoGUI](https://pyautogui.readthedocs.io/) for automation.
-- Tkinter for the graphical user interface.
-
-## Contact
-
-For questions or feedback, feel free to open an issue or contact me at `<your-email@example.com>`.
+- The script **assumes TradingView’s layout remains the same**.
+- A **5-second delay** allows users to prepare the screen before automation starts.
